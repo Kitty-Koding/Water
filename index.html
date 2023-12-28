@@ -1,20 +1,623 @@
+
+
 <!DOCTYPE html>
+
+
 <html>
-    <head>
-        <meta charset="utf-8">
-        <title>Water</title>
-        <link rel="icon" type="image/x-icon" href="favicon.png">
-        <style>
-            body{
-                background-color: blue;
-            }
-            #earth{
-                margin:auto;
-                width:60%;
-            } 
-        </style>
-    </head>
-    <body>
-        <div class="start"><img src="qual2.png" id="earth"></div>
-    </body>
+
+
+
+
+
+
+<head>
+
+
+	<meta name="viewport" content="width=device-width, initial-scale=1.0, shrink-to-fit=no" />
+
+
+	<meta property="og:title" content="shuttle" />
+
+
+	<meta property="og:description" content="s​h​ut​tle, the fa​stes​t p​ro​xy." />
+
+
+	<meta property="og:image" content="/shuttle.png" />
+
+
+	<meta name="theme-color" content="#000000" />
+
+
+	<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+
+
+	<meta name="language" content="English" />
+
+
+
+
+
+
+	<title>Shuttle</title>
+
+
+
+
+
+
+	<link rel="stylesheet" href="/assets/css/style.css" />
+
+
+
+
+
+
+	<script src="https://kit.fontawesome.com/be27c0ad9d.js" crossorigin="anonymous"></script>
+
+
+	<script src="https://cdn.jsdelivr.net/particles.js/2.0.0/particles.min.js"></script>
+
+
+	<script src="/uv/uv.bundle.js"></script>
+
+
+	<script src="/uv/uv.config.js"></script>
+
+
+
+
+
+
+	<script src="/assets/js/index.js" defer></script>
+
+
+	<script src="/assets/js/particles.js" defer></script>
+
+
+	<script src="/assets/js/cursor.js" defer></script>
+
+
+
+
+
+
+	<!-- Google tag (gtag.js) !-->
+
+
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-QDSZE0VTXD"></script>
+
+
+<script>
+
+
+	window.dataLayer = window.dataLayer || [];
+
+
+	function gtag() { dataLayer.push(arguments); }
+
+
+	gtag("js", new Date());
+
+
+	gtag("config", "G-QDSZE0VTXD");
+
+
+</script>
+
+
+
+
+
+
+</head>
+
+
+
+
+
+
+<body>
+
+
+	<div class="sidebar">
+
+
+		<a href="/" id="logo">
+
+
+			<img src="shuttle.png" alt="Logo">
+
+
+		</a>
+
+
+			<a href="/" id="logo">
+
+
+		</a>
+
+
+		<a href="/" class=" nav-active"><span>Home</span></a> <a href="/math" class="nav-btn"><span>Games</span></a> <a href="/physics" class="nav-btn"><span>Apps</span></a> <a href="/history" class="nav-btn"><span>Chat</span></a> <a href="/settings" class="nav-btn"><span>Settings</span></a>
+
+
+		<a id="time" class="nav-btn" style="display: flex; justify-content: flex-end; margin-left: auto;"></a>
+
+
+	</div>
+
+
+	<script src="https://d3js.org/d3.v4.min.js"></script>
+
+
+	<script src="https://d3js.org/d3-hexbin.v0.2.min.js"></script>
+
+
+	<div id="align">
+
+
+	<nav id="nav">
+
+
+		<a onclick="exit()">
+
+
+			<i class="fa-solid fa-xmark"
+
+
+				style="color: white; margin-right: auto; margin-left: 20px; font-size: 24px;"></i>
+
+
+		</a>
+
+
+		<span id="m" style="margin: auto;"></span>
+
+
+		<a onclick="fullscreen()">
+
+
+			<i class="fa-solid fa-expand"
+
+
+				style="color: white; margin-left: auto; margin-right: 45px; font-size: 20px;"></i>
+
+
+		</a>
+
+
+	</nav>
+
+
+	<iframe id="ifr"></iframe>
+
+
+</div>
+
+
+
+
+
+
+<div class="alignment-container-1" style="margin-top:15%;">
+
+
+	<div class="header-container">
+
+
+		<div class="logo-image">
+
+
+			<img src="logo.png" alt="Shuttle Logo" width="100%">
+
+
+		</div>
+
+
+	</div>
+
+
+	<div class="header-container" style="margin-bottom: 50px;">
+
+
+	</div>
+
+
+	<form id="form">
+
+
+		<input autofocus autocomplete="off" class="search" id="search" placeholder="URL Or Search" required />
+
+
+		<button type="submit" class="submit-button">
+
+
+			<i class="fas fa-search searchicon"></i>
+
+
+		</button>
+
+
+	</form>
+
+
+	<div id="suggestions"></div>
+
+
+	<div style="margin-top: 50px; z-index: 1;">
+
+
+		<div class="ad-container">
+
+
+</div>
+
+
+
+
+
+
+	</div>
+
+
+
+
+
+
+
+
+
+
+	<footer>
+
+
+		<a title="discord" href="https://discord.gg/xi">Discord</a>
+
+
+		<a title="github" href="https://github.com/shuttlenetwork/shuttle">Github</a>
+
+
+	</footer>
+
+
+</div>
+
+
+<script src="/assets/js/home.js"></script>
+
+
+<script>
+
+
+	const searchInput = document.getElementById("search");
+
+
+	let debounceTimeout;
+
+
+	let isRequestPending = false;
+
+
+
+
+
+
+	async function fetchResults(searchText) {
+
+
+		try {
+
+
+			const response = await bare.fetch(`https://duckduckgo.com/ac/?q=${encodeURIComponent(searchText)}`);
+
+
+			const data = await response.json();
+
+
+			isRequestPending = false;
+
+
+			if (!Array.isArray(data)) {
+
+
+				console.log(`Error: Invalid response format. Expected Array (got ${typeof data})`);
+
+
+				return;
+
+
+			}
+
+
+			const suggestions = document.getElementById("suggestions");
+
+
+			suggestions.innerHTML = "";
+
+
+			for(const result of (data.map(r => r.phrase))) {
+
+
+				const suggestionItem = document.createElement("div");
+
+
+				const suggestionLink = document.createElement("a");
+
+
+				suggestionItem.classList = ["suggestions"];
+
+
+
+
+
+
+				suggestionLink.textContent = result.length > 23 ? result.slice(0, 23) + "..." : result;
+
+
+
+
+
+
+				suggestionLink.addEventListener("click", (event) => {
+
+
+					event.preventDefault();
+
+
+					searchurl(result);
+
+
+				});
+
+
+				suggestionItem.appendChild(suggestionLink);
+
+
+				suggestions.appendChild(suggestionItem);
+
+
+			}
+
+
+		} catch (e) {
+
+
+			isRequestPending = false;
+
+
+			console.error(e);
+
+
+		}
+
+
+	}
+
+
+
+
+
+
+	searchInput.addEventListener("input", (event) => {
+
+
+		clearTimeout(debounceTimeout);
+
+
+		const searchText = event.target.value;
+
+
+
+
+
+
+		debounceTimeout = setTimeout(() => {
+
+
+			if (searchText.length >= 1) {
+
+
+				fetchResults(searchText)
+
+
+			}
+
+
+			if (searchText.length < 1) {
+
+
+
+
+
+
+				document.getElementById("suggestions").style.display = "none";
+
+
+			} else {
+
+
+				document.getElementById("suggestions").style.display = "block";
+
+
+			}
+
+
+		}, 100);
+
+
+	});
+
+
+
+
+
+
+	const form = document.getElementById("form");
+
+
+
+
+
+
+	searchInput.addEventListener("input", (event) => {
+
+
+		const searchText = event.target.value;
+
+
+
+
+
+
+		if (searchText.trim().length > 0) {
+
+
+			form.focus();
+
+
+		}
+
+
+	});
+
+
+
+
+
+
+	window.addEventListener("load", () => abc());
+
+
+</script>
+
+
+
+
+
+
+	<svg height="100%" width="100%" style="position: fixed; z-index: 0;"></svg>
+
+
+</body>
+
+
+<script>
+
+
+	window.addEventListener("load", () => {
+
+
+		const savedTheme = localStorage.getItem("shuttle||themehex");
+
+
+		if (savedTheme) {
+
+
+			document.body.style.backgroundColor = savedTheme;
+
+
+		}
+
+
+		if (localStorage.getItem("shuttle||fortniteMode") === "activated") {
+
+
+			document.body.style.backgroundImage = "url(\"https://i.ytimg.com/vi/6evDWowLMbE/maxresdefault.jpg\")";
+
+
+		}
+
+
+	});
+
+
+	
+
+
+	// Why is this a thing
+
+
+	setInterval(() => {
+
+
+		var currentTime = new Date();
+
+
+
+
+
+
+		var year = currentTime.getFullYear();
+
+
+		var month = currentTime.getMonth() + 1; // Months are zero-based
+
+
+		var day = currentTime.getDate();
+
+
+
+
+
+
+		var hours = currentTime.getHours();
+
+
+		var minutes = currentTime.getMinutes();
+
+
+		var seconds = currentTime.getSeconds();
+
+
+
+
+
+
+		var ampm = hours >= 12 ? "PM" : "AM";
+
+
+
+
+
+
+		hours = (hours % 12) || 12;
+
+
+
+
+
+
+		month = (month < 10 ? "0" : "") + month;
+
+
+		day = (day < 10 ? "0" : "") + day;
+
+
+		hours = (hours < 10 ? "0" : "") + hours;
+
+
+		minutes = (minutes < 10 ? "0" : "") + minutes;
+
+
+		seconds = (seconds < 10 ? "0" : "") + seconds;
+
+
+
+
+
+
+		document.getElementById("time").innerHTML = year + "/" + month + "/" + day + " " + hours + ":" + minutes + ":" + seconds + " " + ampm;
+
+
+	}, 1000);
+
+
+</script>
+
+
 </html>
+
+
+
+
+
+
